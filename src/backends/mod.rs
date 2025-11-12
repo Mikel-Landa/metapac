@@ -6,6 +6,7 @@ pub mod bun;
 pub mod cargo;
 pub mod dnf;
 pub mod flatpak;
+pub mod go;
 pub mod mas;
 pub mod mise;
 pub mod npm;
@@ -36,6 +37,7 @@ macro_rules! apply_backends {
         (Flatpak, flatpak),
         (Mas, mas),
         (Mise, mise),
+        (Go, go),
         (Npm, npm),
         (Pipx, pipx),
         (Pnpm, pnpm),
