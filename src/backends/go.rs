@@ -65,10 +65,11 @@ impl Backend for Go {
             let entry = entry.wrap_err("reading directory entry")?;
             let path = entry.path();
 
-            if path.is_file() && is_executable(&path) {
-                if let Some(binary_name) = path.file_name().and_then(|n| n.to_str()) {
-                    packages.insert(binary_name.to_string(), GoPackageOptions { version: None });
-                }
+            if path.is_file()
+                && is_executable(&path)
+                && let Some(binary_name) = path.file_name().and_then(|n| n.to_str())
+            {
+                packages.insert(binary_name.to_string(), GoPackageOptions { version: None });
             }
         }
 
@@ -176,19 +177,17 @@ impl Backend for Go {
 }
 
 fn get_gobin() -> Result<PathBuf> {
-    std::env::var("GOBIN")
-        .map(PathBuf::from)
-        .or_else(|_| {
-            let gopath = std::env::var("GOPATH")
-                .or_else(|_| {
-                    home::home_dir()
-                        .map(|p| p.join("go").to_string_lossy().to_string())
-                        .ok_or(std::env::VarError::NotPresent)
-                })
-                .wrap_err("getting GOPATH")?;
+    std::env::var("GOBIN").map(PathBuf::from).or_else(|_| {
+        let gopath = std::env::var("GOPATH")
+            .or_else(|_| {
+                home::home_dir()
+                    .map(|p| p.join("go").to_string_lossy().to_string())
+                    .ok_or(std::env::VarError::NotPresent)
+            })
+            .wrap_err("getting GOPATH")?;
 
-            Ok(PathBuf::from(gopath).join("bin"))
-        })
+        Ok(PathBuf::from(gopath).join("bin"))
+    })
 }
 
 fn is_executable(path: &std::path::Path) -> bool {
