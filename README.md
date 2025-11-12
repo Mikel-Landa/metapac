@@ -163,6 +163,7 @@ for additional backends are always welcome!
 | [`cargo`](#cargo)     |
 | [`dnf`](#dnf)         |
 | [`flatpak`](#flatpak) |
+| [`go`](#go)           |
 | [`mas`](#mas)         |
 | [`mise`](#mise)       |
 | [`nix`](#nix)         |
@@ -228,6 +229,24 @@ Standard usage.
 ### flatpak
 
 Standard usage.
+
+### go
+
+Go packages must be specified as full import paths (e.g., `github.com/user/repo/cmd/tool`), not just binary names. The binary name is automatically extracted from the import path for matching against installed packages.
+
+Available options:
+- `version`: A version specifier (e.g., `"v1.2.3"`, `"latest"`). If not specified, defaults to `"latest"`.
+
+Example:
+```toml
+go = [
+  "github.com/golangci/golangci-lint/cmd/golangci-lint",
+  { package = "github.com/spf13/cobra-cli", options = { version = "latest" } },
+  { package = "golang.org/x/tools/cmd/goimports", options = { version = "v0.1.0" } },
+]
+```
+
+Note: Go doesn't track which import path created which binary. The `update` and `update-all` commands will only work if `enable_updates` is set to `true` in the Go backend config. See the [`Config`](#config) section for more details.
 
 ### mas
 
@@ -349,6 +368,14 @@ locked = false
 # Default: false
 binstall = false
 
+[go]
+# Whether to enable update and update-all commands for the Go backend.
+# Since Go doesn't track which import path created which binary, updates
+# work by reinstalling all installed binaries. When `false`, update commands
+# will be no-ops.
+# Default: false
+enable_updates = false
+
 [nix]
 # Optional profile path to operate on. If unset, nix uses the default profile.
 # Default: None
@@ -361,6 +388,7 @@ impure = false
 # Pass --accept-flake-config to nix commands that evaluate installables.
 # Default: false
 accept_flake_config = false
+
 
 [vscode]
 # Since VSCode and VSCodium both operate on the same package database
@@ -525,6 +553,12 @@ flatpak = {
       name = "custom_installation:org.mozilla.firefox",
       options = { remote = "flathub_beta" }
     },
+  ]
+}
+go = {
+  packages = [
+    "github.com/user/repo/cmd/tool",
+    { name = "golang.org/x/tools/cmd/goimports", options = { version = "latest" } },
   ]
 }
 mas = { packages = ["package1", { name = "package2" }] }
