@@ -152,6 +152,7 @@ for additional backends are always welcome!
 | [`cargo`](#cargo)     |
 | [`dnf`](#dnf)         |
 | [`flatpak`](#flatpak) |
+| [`go`](#go)           |
 | [`mas`](#mas)         |
 | [`mise`](#mise)       |
 | [`npm`](#npm)         |
@@ -217,6 +218,23 @@ Reported in #152.
 ### mas
 
 ### mise
+### go
+
+Go packages must be specified as full import paths (e.g., `github.com/user/repo/cmd/tool`), not just binary names. The binary name is automatically extracted from the import path for matching against installed packages.
+
+Available options:
+- `version`: A version specifier (e.g., `"v1.2.3"`, `"latest"`). If not specified, defaults to `"latest"`.
+
+Example:
+```toml
+go = [
+  "github.com/golangci/golangci-lint/cmd/golangci-lint",
+  { package = "github.com/spf13/cobra-cli", options = { version = "latest" } },
+  { package = "golang.org/x/tools/cmd/goimports", options = { version = "v0.1.0" } },
+]
+```
+
+Note: Go doesn't track which import path created which binary. The `update` and `update-all` commands will only work if `enable_updates` is set to `true` in the Go backend config. See the [`Config`](#config) section for more details.
 
 ### npm
 
@@ -321,6 +339,14 @@ binstall = false
 # Default: true
 systemwide = true
 
+[go]
+# Whether to enable update and update-all commands for the Go backend.
+# Since Go doesn't track which import path created which binary, updates
+# work by reinstalling all installed binaries. When `false`, update commands
+# will be no-ops.
+# Default: false
+enable_updates = false
+
 [vscode]
 # Since VSCode and VSCodium both operate on the same package database
 # they are mutually exclusive and so you must pick which one you want
@@ -403,6 +429,10 @@ dnf = [
 flatpak = [
   "package1",
   { package = "package2", options = { remote = "flathub", systemwide = false } },
+]
+go = [
+  "github.com/user/repo/cmd/tool",
+  { package = "golang.org/x/tools/cmd/goimports", options = { version = "latest" } },
 ]
 mas = ["package1", { package = "package2" }]
 mise = [
