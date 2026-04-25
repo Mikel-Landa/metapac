@@ -162,6 +162,14 @@ pub trait Backend {
         config: &Self::Config,
     ) -> Result<()>;
 
+    /// Converts a package ID (as written in group files) to the key used in the installed map.
+    ///
+    /// Most backends use the package ID directly. Backends that store by a derived key (e.g. Go
+    /// stores by binary name rather than import path) should override this.
+    fn installed_key(package_id: &str) -> String {
+        package_id.to_string()
+    }
+
     /// Attempts to return the version of the backend.
     ///
     /// If the package is not installed then this method should return an error.

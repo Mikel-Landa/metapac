@@ -369,7 +369,7 @@ fn missing(
         ($(($upper_backend:ident, $lower_backend:ident)),*) => {
             $(
                 for (package, options) in required.$lower_backend.packages.iter() {
-                    if (!installed.$lower_backend.packages.contains_key(package)) {
+                    if (!installed.$lower_backend.packages.contains_key(&$upper_backend::installed_key(package))) {
                         missing.$lower_backend.packages.insert(package.to_string(), options.clone());
                     }
                 }

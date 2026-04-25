@@ -76,6 +76,10 @@ impl Backend for Go {
         Ok(packages)
     }
 
+    fn installed_key(package_id: &str) -> String {
+        extract_binary_name(package_id)
+    }
+
     fn install_packages(
         packages: &BTreeMap<String, Self::PackageOptions>,
         _: bool,
