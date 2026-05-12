@@ -220,7 +220,12 @@ fn is_executable(path: &std::path::Path) -> bool {
 fn extract_binary_name(import_path: &str) -> String {
     import_path
         .split('/')
+        .filter(|s| !is_version_suffix(s))
         .next_back()
         .unwrap_or(import_path)
         .to_string()
+}
+
+fn is_version_suffix(s: &str) -> bool {
+    s.starts_with('v') && s.len() > 1 && s[1..].chars().all(|c| c.is_ascii_digit())
 }
