@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- `uv` backend: new per-package `from` option. Maps to
+  `uv tool install --from <from> <name>`, allowing installs from wheel URLs,
+  git refs, or local paths while keeping the canonical package name as the key
+  so `metapac clean` doesn't treat the tool as unmanaged.
+
 ## [0.10.2] - 2026-08-31
 
 ### Added

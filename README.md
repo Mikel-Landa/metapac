@@ -288,7 +288,22 @@ Standard usage.
 
 ### uv
 
-Standard usage.
+In addition to standard usage, the `from` option lets you install a tool from
+a non-PyPI source (wheel URL, git ref, local path) while keeping the canonical
+package name as the key. This avoids round-trip churn: `uv tool list` reports
+the canonical name, so `metapac clean` won't mark a `from`-installed tool as
+unmanaged.
+
+```toml
+uv = {
+  packages = [
+    "ruff",
+    { name = "mytool", options = { python = "3.11" } },
+    { name = "peasyai-mcp", options = { from = "https://example.com/peasyai_mcp-1.0.0-py3-none-any.whl" } },
+    { name = "my-git-tool", options = { from = "git+https://github.com/owner/repo" } },
+  ]
+}
+```
 
 ### vscode
 

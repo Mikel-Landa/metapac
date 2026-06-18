@@ -22,6 +22,14 @@ pub struct UvConfig {}
 pub struct UvPackageOptions {
     #[serde(default)]
     python: Option<String>,
+    /// Install the package from an alternative source instead of `PyPI`.
+    /// Passed to `uv tool install --from <from> <name>`. Useful for wheel
+    /// URLs, git repos (`git+https://...`), or local paths where the
+    /// canonical package name still needs to match what `uv tool list`
+    /// reports so that `metapac clean` doesn't treat the install as
+    /// unmanaged.
+    #[serde(default)]
+    from: Option<String>,
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -60,7 +68,15 @@ impl Backend for Uv {
         .lines()
         .filter(|x| !x.starts_with('-'))
         .map(|x| x.split(' ').next().unwrap().to_string())
-        .map(|x| (x, Self::PackageOptions { python: None }))
+        .map(|x| {
+            (
+                x,
+                Self::PackageOptions {
+                    python: None,
+                    from: None,
+                },
+            )
+        })
         .collect();
 
         Ok(names)
@@ -77,6 +93,8 @@ impl Backend for Uv {
                     .into_iter()
                     .chain(options.python.is_some().then_some("--python"))
                     .chain(options.python.as_deref())
+                    .chain(options.from.is_some().then_some("--from"))
+                    .chain(options.from.as_deref())
                     .chain([package.as_str()]),
                 Perms::Same,
             )?;
