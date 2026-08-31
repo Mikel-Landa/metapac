@@ -610,7 +610,7 @@ of any other package managers we should be aware of.
   supports 28 package managers! Designed for manual package management
   rather than declarative.
 - [meta-package-manager](https://github.com/kdeldycke/meta-package-manager):
-  written in Python, supports 75 package managers on Linux, macOS and Windows.
+  written in python, supports 75 package managers on linux, mac and windows.
 
 ## Credits
 

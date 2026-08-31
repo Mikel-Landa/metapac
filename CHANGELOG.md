@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.10.2] - 2026-08-31
+
+### Added
+
+- Added a new per-package `binstall` option to the `cargo` backend to allow
+  overriding a git package which binstall doesn't support when setting
+  `binstall=true` at the global `config.toml` level (fixed in #236), thanks
+  @frap129!
+
 ## [0.10.1] - 2026-08-09
 
 ### Added
